@@ -39,6 +39,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -133,14 +134,14 @@ fun LayoutDemo() {
                 color = MaterialTheme.colorScheme.onPrimary
             )
             Text(
-                text = "SHYAM", modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp, top = 6.dp, bottom = 6.dp),
+                text = "SHYAM",
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 6.dp, bottom = 6.dp),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimary
             )
             Text(
-                text = "RAM", modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp, top = 6.dp, bottom = 6.dp),
+                text = "RAM",
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 6.dp, bottom = 6.dp),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimary
             )
@@ -152,22 +153,19 @@ fun LayoutDemo() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen() {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Login",
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary
+    Scaffold(topBar = {
+        TopAppBar(
+            title = {
+                Text(
+                    text = "Login",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    style = MaterialTheme.typography.headlineSmall
                 )
+            }, colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primary
             )
-        }
-    ) { padding ->
+        )
+    }) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
@@ -178,43 +176,45 @@ fun LoginScreen() {
                 text = "Please provide your valid credentials",
                 style = MaterialTheme.typography.titleLarge
             )
-            TextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 32.dp),
+            TextField(modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 32.dp),
                 value = "someone@gmail.com",
                 onValueChange = {})
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp),
-                value = "password", onValueChange = {},
+                value = "password",
+                onValueChange = {},
                 visualTransformation = VisualTransformation.None
             )
 
-            Button(
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .fillMaxWidth()
-                    .heightIn(min = 52.dp),
-                        onClick = { /*TODO*/ }) {
+            Button(modifier = Modifier
+                .padding(top = 16.dp)
+                .fillMaxWidth()
+                .heightIn(min = 52.dp),
+                onClick = { /*TODO*/ }) {
                 Text(text = "Login")
             }
 
-            Row (
+            Row(
                 modifier = Modifier.padding(top = 10.dp),
-                verticalAlignment = Alignment.CenterVertically){
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Checkbox(checked = true, onCheckedChange = {})
                 Text(text = "Remember me.")
             }
 
-            Text(text = buildAnnotatedString {
-                withStyle(style = SpanStyle(fontSize = 12.sp)){
+            Text(
+                modifier = Modifier.align(Alignment.End),
+                text = buildAnnotatedString {
                     append("If new user")
+                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary
+                , textDecoration = TextDecoration.Underline)) {
+                    append(" register ")
                 }
-                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)){
-                    append("Register")
-                }
+                append(" here.")
             })
         }
 
