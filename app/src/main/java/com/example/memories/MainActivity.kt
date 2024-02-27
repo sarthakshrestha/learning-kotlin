@@ -1,5 +1,6 @@
 package com.example.memories
 
+import android.graphics.drawable.Icon
 import android.graphics.fonts.Font
 import android.graphics.fonts.FontStyle
 import android.os.Bundle
@@ -20,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -187,6 +189,12 @@ fun LoginScreen() {
                     .padding(top = 16.dp),
                 value = "password",
                 onValueChange = {},
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.eye_arrow_left_outline),
+                        contentDescription = ""
+                    )
+                },
                 visualTransformation = VisualTransformation.None
             )
 
@@ -210,12 +218,16 @@ fun LoginScreen() {
                 modifier = Modifier.align(Alignment.End),
                 text = buildAnnotatedString {
                     append("If new user")
-                withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary
-                , textDecoration = TextDecoration.Underline)) {
-                    append(" register ")
-                }
-                append(" here.")
-            })
+                    withStyle(
+                        style = SpanStyle(
+                            color = MaterialTheme.colorScheme.primary,
+                            textDecoration = TextDecoration.Underline
+                        )
+                    ) {
+                        append(" register ")
+                    }
+                    append(" here.")
+                })
         }
 
     }
