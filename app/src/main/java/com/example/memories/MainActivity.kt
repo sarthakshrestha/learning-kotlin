@@ -8,6 +8,7 @@ import android.widget.CheckBox
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +18,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +33,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
@@ -148,69 +156,110 @@ fun LayoutDemo() {
                 color = MaterialTheme.colorScheme.onPrimary
             )
         }
-
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen() {
-    Scaffold(topBar = {
-        TopAppBar(
-            title = {
-                Text(
-                    text = "Login",
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    style = MaterialTheme.typography.headlineSmall
+    var email: String by remember {
+        mutableStateOf("")
+    }
+    var password: String by remember {
+        mutableStateOf("")
+    }
+    var rememberMe: Boolean by remember {
+        mutableStateOf(false)
+    }
+    var isPasswordVisible: Boolean by remember {
+        mutableStateOf(false)
+    }
+    val onEmailChanged: (String) -> Unit = {
+        email = it
+    }
+    val onPasswordChanged: (String) -> Unit = {
+        password = it
+    }
+    val rememberMeToggled: (Boolean) -> Unit = {
+        rememberMe = it
+    }
+    val onPasswordToggled: () -> Unit = {
+        isPasswordVisible = !isPasswordVisible
+    }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Login",
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary
                 )
-            }, colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary
             )
-        )
-    }) { padding ->
+        }) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
-            Text(text = "Welcome 2 da app", style = MaterialTheme.typography.headlineMedium)
+            Text(text = "WELCOME", style = MaterialTheme.typography.headlineMedium)
             Text(
-                text = "Please provide your valid credentials",
+                text = "Please provide your valid credentials.",
                 style = MaterialTheme.typography.titleLarge
             )
-            TextField(modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp),
-                value = "someone@gmail.com",
-                onValueChange = {})
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp),
+                label = { Text(text = "Email") },
+                value = email,
+                onValueChange = onEmailChanged,
+            )
             TextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp),
-                value = "password",
-                onValueChange = {},
+                visualTransformation = if (isPasswordVisible) VisualTransformation.None
+                else PasswordVisualTransformation(),
+                value = password,
+                label = { Text(text = "Password") },
                 trailingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.eye_arrow_left_outline),
-                        contentDescription = ""
-                    )
+                    if (isPasswordVisible) {
+                        Icon(
+                            modifier = Modifier.clickable(enabled = true, onClick = onPasswordToggled),
+                            painter = painterResource(id = R.drawable.eye_arrow_left_outline),
+                            contentDescription = "Password view icon."
+                        )
+                    } else {
+                        Icon(
+                            modifier = Modifier.clickable(enabled = true, onClick = onPasswordToggled),
+                            painter = painterResource(id = R.drawable.eye_off),
+                            contentDescription = "Password view icon."
+                        )
+                    }
                 },
-                visualTransformation = VisualTransformation.None
+                onValueChange = onPasswordChanged,
             )
 
-            Button(modifier = Modifier
-                .padding(top = 16.dp)
-                .fillMaxWidth()
-                .heightIn(min = 52.dp),
-                onClick = { /*TODO*/ }) {
-                Text(text = "Login")
+            Button(
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .fillMaxWidth()
+                    .heightIn(min = 52.dp),
+                onClick = { }) {
+                Text(text = "LOGIN")
             }
 
             Row(
                 modifier = Modifier.padding(top = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Checkbox(checked = true, onCheckedChange = {})
+                Checkbox(checked = rememberMe, onCheckedChange = rememberMeToggled)
                 Text(text = "Remember me.")
             }
 
@@ -224,12 +273,12 @@ fun LoginScreen() {
                             textDecoration = TextDecoration.Underline
                         )
                     ) {
-                        append(" register ")
+                        append(" register")
                     }
                     append(" here.")
-                })
+                },
+            )
         }
-
     }
 }
 
